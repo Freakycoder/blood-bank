@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Donor {
+  ID Int @id @default(autoincrement())
+  DonorName String
+  Chat Chat[]
+}
+
+model Hospital{
+  ID Int @id @default(autoincrement())
+  HospitalName String 
+  Chat Chat[]
+}
+
+model Chat {
+  ChatID    Int     @id @default(autoincrement())
+  RecipientName String   
+  LastMessage String?
+  Avatar String? @default("https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=")
+  Messages Message[]
+  Donor Donor @relation(fields: [DonorID], references: [ID])
+  DonorID Int
+  Hospital Hospital @relation(fields: [HospitalID], references: [ID])
+  HospitalID Int
+}
+
+model Message {
+  MessageID Int @id @default(autoincrement())
+  ChatID Int
+  Chat Chat @relation(fields: [ChatID], references: [ChatID])
+  Sender String
+  Text String
+  TimeStamp DateTime
+}
